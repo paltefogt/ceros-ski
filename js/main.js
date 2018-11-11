@@ -292,7 +292,7 @@ $(document).ready(function() {
                         placeNewObstacle(skierDirection);
                     }
                     else {
-                        skierDirection--;
+                        skierDirection === 0 ? skierDirection = 1 : --skierDirection;
                     }
                     event.preventDefault();
                     break;
