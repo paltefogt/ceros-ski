@@ -1,1 +1,1 @@
-# skierGame
+# ceros-ski
