@@ -1,8 +1,8 @@
 import {EventEmitter} from "./event.emitter.js";
 import {Skier} from "./skier.js";
-import {EVENTS} from "./config.js";
+import {EVENTS} from "../lib/config.js";
 import {ObstacleManager} from "./obstacle.manager.js";
-import {Utils} from "./utils.js";
+import {Utils} from "../lib/utils.js";
 
 export class Game extends EventEmitter {
     constructor() {
@@ -29,13 +29,19 @@ export class Game extends EventEmitter {
         this.obstacleManager = new ObstacleManager(this);
     }
 
+    // 0 = crash
+    // 1 = left
+    // 2 = left down
+    // 3 = down
+    // 4 = right down
+    // 5 = right
     setupKeyhandler() {
         const self = this;
         $(window).keydown(function(event) {
             switch(event.which) {
                 case 37: // left
                     if(self.skier.direction === 1) {
-                        //self.skier.x -= self.skier.speed;
+                        self.skier.x -= self.skier.speed;
                         self.obstacleManager.placeNewObstacle(self.skier.direction);
                     }
                     else {
@@ -45,7 +51,7 @@ export class Game extends EventEmitter {
                     break;
                 case 39: // right
                     if(self.skier.direction === 5) {
-                        //self.skier.x += self.skier.speed;
+                        self.skier.x += self.skier.speed;
                         self.obstacleManager.placeNewObstacle(self.skier.direction);
                     }
                     else {
@@ -55,7 +61,7 @@ export class Game extends EventEmitter {
                     break;
                 case 38: // up
                     if(self.skier.direction === 1 || self.skier.direction === 5) {
-                        //self.skier.y -= self.skier.speed;
+                        self.skier.y -= self.skier.speed;
                         self.obstacleManager.placeNewObstacle(6);
                     }
                     event.preventDefault();
@@ -96,8 +102,11 @@ export class Game extends EventEmitter {
         this.skier.move();
 
         utils.checkIfSkierHitObstacle(this.skier, this.obstacleManager.obstacles, this.gameWidth, this.gameHeight);
+
         this.skier.draw(this.ctx, this.gameWidth, this.gameHeight);
+
         this.obstacleManager.drawObstacles(this.ctx, this.skier.x, this.skier.y, this.gameWidth, this.gameHeight);
+
         this.ctx.restore();
         requestAnimationFrame(this.gameLoop.bind(this));
     };

@@ -1,6 +1,6 @@
-import {Utils} from "./utils.js";
+import {Utils} from "../lib/utils.js";
 import {Obstacle} from "./obstacle.js";
-import {EVENTS} from "./config.js";
+import {EVENTS} from "../lib/config.js";
 
 export class ObstacleManager {
     constructor(subject) {
@@ -37,10 +37,9 @@ export class ObstacleManager {
     }
 
     onEvent(event, data) {
-        console.log(`onEvent: ${event} : ${data}`);
         switch(event) {
             case EVENTS.PLACE_NEW_OBSTACLE:
-                this.placeNewObstacle();
+                this.placeNewObstacle(data.direction, data.skierMapX, data.skierMapY, data.gameWidth, data.gameHeight);
                 break;
         }
     }
@@ -67,7 +66,6 @@ export class ObstacleManager {
     drawObstacles(ctx, skierMapX, skierMapY, gameWidth, gameHeight) {
         const self = this;
         var newObstacles = [];
-
         _.each(this.obstacles, function(obstacle) {
             const obstacleImage = self.loadedAssets[obstacle.type];
             const x = obstacle.x - skierMapX - obstacleImage.width / 2;

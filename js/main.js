@@ -1,8 +1,6 @@
-// import {Utils} from "./lib/utils.js";
-import {Game} from "./lib/game.js";
+import {Game} from "./game/game.js";
 
 $(document).ready(function() {
-
     const game = new Game();
     game.initGame();
 });

@@ -9,7 +9,7 @@ export class Obstacle {
         return {
             left: this.x,
             right: this.x + this.img.width,
-            top: this.y + this.img.height - 5,
+            top: this.y - 5,
             bottom: this.y + this.img.height
         };
     }

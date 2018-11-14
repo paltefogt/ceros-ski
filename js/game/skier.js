@@ -1,5 +1,5 @@
-import {SKIER_SPEED, SKIER_SPEED_SCALER, EVENTS} from "./config.js";
-import {Utils} from "./utils.js";
+import {SKIER_SPEED, SKIER_SPEED_SCALER, EVENTS} from "../lib/config.js";
+import {Utils} from "../lib/utils.js";
 
 export class Skier {
     constructor(subject, x, y) {
@@ -60,12 +60,12 @@ export class Skier {
                 this.subject.emit(EVENTS.PLACE_NEW_OBSTACLE, data);
                 break;
             case 3:
-                this.y += this.speed;
+                this.y += Math.round(this.speed / this.speedScaler);
                 this.subject.emit(EVENTS.PLACE_NEW_OBSTACLE, data);
                 break;
             case 4:
-                this.x += this.speed / this.speedScaler;
-                this.y += this.speed / this.speedScaler;
+                this.x += Math.round(this.speed / this.speedScaler);
+                this.y += Math.round(this.speed / this.speedScaler);
                 this.subject.emit(EVENTS.PLACE_NEW_OBSTACLE, data);
                 break;
         }
@@ -109,8 +109,12 @@ export class Skier {
         };
     }
 
-    draw(ctx, gameWidth, gameHeight) {
+    draw(ctx) {
+        const utils = new Utils();
+        const rect = this.getRect(utils.gameWidth, utils.gameHeight);
         const skierImage = this.getSkierImage();
-        ctx.drawImage(skierImage, this.x, this.y, skierImage.width, skierImage.height);
+
+        ctx.drawImage(skierImage, (utils.gameWidth - skierImage.width)/2, (utils.gameHeight - skierImage.height)/2, skierImage.width, skierImage.height);
+        //ctx.strokeRect(rect.left, rect.top, skierImage.width, skierImage.height);
     }
 }
