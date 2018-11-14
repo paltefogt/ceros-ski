@@ -53,7 +53,7 @@ export class ObstacleManager {
         const minY = gameHeight / 2 + 100;
         const maxY = gameHeight + 50;
 
-        for(var i = 0; i < numberObstacles; i++) {
+        for(let i = 0; i < numberObstacles; i++) {
             this.placeRandomObstacle(minX, maxX, minY, maxY);
         }
 
@@ -65,7 +65,7 @@ export class ObstacleManager {
 
     drawObstacles(ctx, skierMapX, skierMapY, gameWidth, gameHeight) {
         const self = this;
-        var newObstacles = [];
+        const newObstacles = [];
         _.each(this.obstacles, function(obstacle) {
             const obstacleImage = self.loadedAssets[obstacle.type];
             const x = obstacle.x - skierMapX - obstacleImage.width / 2;

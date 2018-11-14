@@ -40,44 +40,23 @@ export class Game extends EventEmitter {
     // 5 = right
     setupKeyhandler() {
         const self = this;
-        const data = {
-            direction: this.direction,
-            skierMapX: this.x,
-            skierMapY: this.y,
-            gameWidth: this.gameWidth,
-            gameHeight: this.gameHeight
-        };
+
         $(window).keydown(function(event) {
             switch(event.which) {
                 case 37: // left
-                    if(self.skier.direction === 1) {
-                        self.skier.x -= self.skier.speed;
-                        this.emit(EVENTS.PLACE_NEW_OBSTACLE, data);
-                    }
-                    else {
-                        self.skier.direction === 0 ? self.skier.direction = 1 : --self.skier.direction;
-                    }
+                    self.emit(EVENTS.KEY_LEFT);
                     event.preventDefault();
                     break;
                 case 39: // right
-                    if(self.skier.direction === 5) {
-                        self.skier.x += self.skier.speed;
-                        this.emit(EVENTS.PLACE_NEW_OBSTACLE, data);
-                    }
-                    else {
-                        self.skier.direction === 0 ? self.skier.direction = 5 : ++self.skier.direction;
-                    }
+                    self.emit(EVENTS.KEY_RIGHT);
                     event.preventDefault();
                     break;
                 case 38: // up
-                    if(self.skier.direction === 1 || self.skier.direction === 5) {
-                        self.skier.y -= self.skier.speed;
-                        this.emit(EVENTS.PLACE_NEW_OBSTACLE, data);
-                    }
+                    self.emit(EVENTS.KEY_UP);
                     event.preventDefault();
                     break;
                 case 40: // down
-                    self.skier.direction = 3;
+                    self.emit(EVENTS.KEY_DOWN);
                     event.preventDefault();
                     break;
             }

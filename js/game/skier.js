@@ -4,7 +4,6 @@ import {Utils} from "../lib/utils.js";
 export class Skier {
     constructor(subject, x, y) {
         this.subject = subject;
-        this.subject.addListener(EVENTS.INIT_SKIER, (event, data) => this.onEvent(event, data));
 
         this.x = x;
         this.y = y;
@@ -20,15 +19,75 @@ export class Skier {
             skierRight: 'img/skier_right.png'
         };
         this.loadedAssets = {};
+
+        // event listeners
+        this.subject.addListener(EVENTS.INIT_SKIER, (event, data) => this.onEvent(event, data));
+        this.subject.addListener(EVENTS.KEY_LEFT, (event, data) => this.onEvent(event, data));
+        this.subject.addListener(EVENTS.KEY_RIGHT, (event, data) => this.onEvent(event, data));
+        this.subject.addListener(EVENTS.KEY_UP, (event, data) => this.onEvent(event, data));
+        this.subject.addListener(EVENTS.KEY_DOWN, (event, data) => this.onEvent(event, data));
     }
 
     onEvent(event, data) {
-        console.log(`onEvent: ${event} : ${data}`);
         switch(event) {
             case EVENTS.INIT_SKIER:
                 this.loadAssets();
                 break;
+            case EVENTS.KEY_LEFT:
+                this.onKeyLeft();
+                break;
+            case EVENTS.KEY_RIGHT:
+                this.onKeyRight();
+                break;
+            case EVENTS.KEY_UP:
+                this.onKeyUp();
+                break;
+            case EVENTS.KEY_DOWN:
+                this.onKeyDown();
+                break;
         }
+    }
+
+    onKeyLeft() {
+        if(this.direction === 1) {
+            this.x -= this.speed;
+            this.emitEvent(EVENTS.PLACE_NEW_OBSTACLE, this.getNewObstacleData());
+        }
+        else {
+            this.direction === 0 ? this.direction = 1 : --this.direction;
+        }
+    }
+    onKeyRight() {
+        if(this.direction === 5) {
+            this.x += this.speed;
+            this.emitEvent(EVENTS.PLACE_NEW_OBSTACLE, this.getNewObstacleData());
+        }
+        else {
+            this.direction === 0 ? this.direction = 5 : ++this.direction;
+        }
+    }
+    onKeyUp() {
+        if(this.direction === 1 || this.direction === 5) {
+            this.y -= this.speed;
+            this.emitEvent(EVENTS.PLACE_NEW_OBSTACLE, this.getNewObstacleData());
+        }
+    }
+    onKeyDown() {
+        this.direction = 3;
+    }
+
+    getNewObstacleData() {
+        const utils = new Utils();
+        return {
+            direction: this.direction,
+            skierMapX: this.x,
+            skierMapY: this.y,
+            gameWidth: utils.gameWidth,
+            gameHeight: utils.gameHeight
+        };
+    }
+    emitEvent(type, data) {
+        this.subject.emit(type, data);
     }
 
     loadAssets() {
@@ -111,10 +170,7 @@ export class Skier {
 
     draw(ctx) {
         const utils = new Utils();
-        const rect = this.getRect(utils.gameWidth, utils.gameHeight);
         const skierImage = this.getSkierImage();
-
         ctx.drawImage(skierImage, (utils.gameWidth - skierImage.width)/2, (utils.gameHeight - skierImage.height)/2, skierImage.width, skierImage.height);
-        //ctx.strokeRect(rect.left, rect.top, skierImage.width, skierImage.height);
     }
 }
