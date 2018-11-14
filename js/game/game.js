@@ -3,6 +3,7 @@ import {Skier} from "./skier.js";
 import {EVENTS} from "../lib/config.js";
 import {ObstacleManager} from "./obstacle.manager.js";
 import {Utils} from "../lib/utils.js";
+import {ScoreKeeper} from "./score.keeper.js";
 
 export class Game extends EventEmitter {
     constructor() {
@@ -27,6 +28,8 @@ export class Game extends EventEmitter {
         // game objects
         this.skier = new Skier(this, 0, 0);
         this.obstacleManager = new ObstacleManager(this);
+        this.scoreKeeper = new ScoreKeeper(this);
+        this.scoreKeeper.getScores();
     }
 
     // 0 = crash
@@ -37,12 +40,19 @@ export class Game extends EventEmitter {
     // 5 = right
     setupKeyhandler() {
         const self = this;
+        const data = {
+            direction: this.direction,
+            skierMapX: this.x,
+            skierMapY: this.y,
+            gameWidth: this.gameWidth,
+            gameHeight: this.gameHeight
+        };
         $(window).keydown(function(event) {
             switch(event.which) {
                 case 37: // left
                     if(self.skier.direction === 1) {
                         self.skier.x -= self.skier.speed;
-                        self.obstacleManager.placeNewObstacle(self.skier.direction);
+                        this.emit(EVENTS.PLACE_NEW_OBSTACLE, data);
                     }
                     else {
                         self.skier.direction === 0 ? self.skier.direction = 1 : --self.skier.direction;
@@ -52,7 +62,7 @@ export class Game extends EventEmitter {
                 case 39: // right
                     if(self.skier.direction === 5) {
                         self.skier.x += self.skier.speed;
-                        self.obstacleManager.placeNewObstacle(self.skier.direction);
+                        this.emit(EVENTS.PLACE_NEW_OBSTACLE, data);
                     }
                     else {
                         self.skier.direction === 0 ? self.skier.direction = 5 : ++self.skier.direction;
@@ -62,7 +72,7 @@ export class Game extends EventEmitter {
                 case 38: // up
                     if(self.skier.direction === 1 || self.skier.direction === 5) {
                         self.skier.y -= self.skier.speed;
-                        self.obstacleManager.placeNewObstacle(6);
+                        this.emit(EVENTS.PLACE_NEW_OBSTACLE, data);
                     }
                     event.preventDefault();
                     break;

@@ -4,5 +4,9 @@ export const EVENTS = {
     INIT_SKIER: 'initSkier',
     INIT_SKIER_COMPLETE: 'initSkierComplete',
     GAME_INIT_COMPLETE: 'gameInitComplete',
-    PLACE_NEW_OBSTACLE: 'placeNewObstacle'
+    PLACE_NEW_OBSTACLE: 'placeNewObstacle',
+    SKIER_CRASH: 'skierCrash',
+    INCREMENT_SCORE: 'incrementScore',
+    GAMEOVER: 'gameover'
 };
+export const SCORE_URL = 'https://dbae2oep6a.execute-api.us-east-1.amazonaws.com/dev/ski-game/score';
