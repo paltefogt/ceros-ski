@@ -1,4 +1,4 @@
-import {EVENTS, SCORE_URL, UTILS} from "../lib/globals.js";
+import {EVENTS, SCORE_URL, UTILS, CRASH_LIMIT} from "../lib/globals.js";
 
 export class ScoreKeeper {
     constructor() {
@@ -7,7 +7,14 @@ export class ScoreKeeper {
 
         // event listeners
         UTILS.eventEmitter.addListener(EVENTS.SKIER_CRASH, (event, data) => this.onEvent(event, data));
-        UTILS.eventEmitter.addListener(EVENTS.INCREMENT_SCORE, (event, data) => this.onEvent(event, data));
+        UTILS.eventEmitter.addListener(EVENTS.TALLY_SCORE, (event, data) => this.onEvent(event, data));
+        // UTILS.eventEmitter.addListener(EVENTS.KEY_R, (event, data) => this.onEvent(event, data));
+
+    }
+
+    onReset() {
+        // this.score = 0;
+        // this.crashCount = 0;
     }
 
     onEvent(event, data) {
@@ -15,33 +22,58 @@ export class ScoreKeeper {
             case EVENTS.SKIER_CRASH:
                 this.onCrash();
                 break;
-            case EVENTS.INCREMENT_SCORE:
-                this.incrementScore(data.pointsToAdd);
+            case EVENTS.TALLY_SCORE:
+                this.tallyScore(data.rawScore);
+                break;
+            case EVENTS.KEY_R:
+                this.onReset();
                 break;
         }
     }
 
     onCrash() {
-        this.crashCount < 3 ? ++this.crashCount : UTILS.emitEvent(EVENTS.GAMEOVER);
-        console.log(`crashCount: ${this.crashCount}`);
+        ++this.crashCount;
+        if (this.crashCount === CRASH_LIMIT)
+            UTILS.emitEvent(EVENTS.GAMEOVER);
     }
 
-    incrementScore(pointsToAdd) {
-        this.score += pointsToAdd;
+    tallyScore(rawScore) {
+        let times = Math.floor(rawScore / 100);
+        const remain = rawScore % 100;
+
+        _.times(times, n => {
+            if(n === 0)
+                this.score += 100;
+            if(n > 0 && n <= 3)
+                this.score += 200;
+            if(n > 3)
+                this.score += 300;
+        });
+        this.score += remain;
+        UTILS.emitEvent(EVENTS.SHOW_SCORE, {score: this.score});
+        this.saveScore()
+            .then(res => {
+                this.getScores();
+            })
+            .catch(err => {
+                console.log('ERROR saveScore');
+                console.log(err);
+            });
     }
 
     saveScore() {
-        const payload = JSON.stringify({score: 120});
+        const payload = JSON.stringify({score: this.score});
+        const defer = new $.Deferred();
         $.post( SCORE_URL, payload, function( data ) {
             console.log(data);
-        })
+            defer.resolve(data);
+        });
+        return defer.promise();
     }
 
     getScores() {
         $.get( SCORE_URL, function( data ) {
-            const scores = JSON.parse(data).sort((a,b) => {
-                return a.score - b.score;
-            }).reverse();
+            UTILS.emitEvent(EVENTS.SCORE_LIST_RETRIEVED, {scores: JSON.parse(data)});
         });
     }
 }

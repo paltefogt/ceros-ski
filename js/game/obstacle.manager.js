@@ -5,6 +5,7 @@ export class ObstacleManager {
     constructor() {
         UTILS.eventEmitter.addListener(EVENTS.PLACE_NEW_OBSTACLE, (event, data) => this.onEvent(event, data));
         UTILS.eventEmitter.addListener(EVENTS.SKIER_CRASH, (event, data) => this.onEvent(event, data));
+        // UTILS.eventEmitter.addListener(EVENTS.KEY_R, (event, data) => this.onEvent(event, data));
 
         this.obstacleTypes = [
             'tree',
@@ -21,6 +22,10 @@ export class ObstacleManager {
         this.loadedAssets = {};
 
         this.obstacles = [];
+    }
+
+    onReset() {
+        // this.obstacles = [];
     }
 
     loadAssets() {
@@ -41,6 +46,9 @@ export class ObstacleManager {
                 break;
             case EVENTS.SKIER_CRASH:
                 this.onSkierCrash(data.obstacleIndex);
+                break;
+            case EVENTS.KEY_R:
+                this.onReset();
                 break;
         }
     }

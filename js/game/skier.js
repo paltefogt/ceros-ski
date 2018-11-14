@@ -24,6 +24,17 @@ export class Skier {
         UTILS.eventEmitter.addListener(EVENTS.KEY_UP, (event, data) => this.onEvent(event, data));
         UTILS.eventEmitter.addListener(EVENTS.KEY_DOWN, (event, data) => this.onEvent(event, data));
         UTILS.eventEmitter.addListener(EVENTS.SKIER_CRASH, (event, data) => this.onEvent(event, data));
+        UTILS.eventEmitter.addListener(EVENTS.GAMEOVER, (event, data) => this.onEvent(event, data));
+        // UTILS.eventEmitter.addListener(EVENTS.KEY_R, (event, data) => this.onEvent(event, data));
+
+    }
+
+    onReset() {
+        // this.x = 0;
+        // this.y = 0;
+        // this.speed = SKIER_SPEED;
+        // this.speedScaler = SKIER_SPEED_SCALER;
+        // this.direction = 5;
     }
 
     onEvent(event, data) {
@@ -33,6 +44,9 @@ export class Skier {
                 break;
             case EVENTS.SKIER_CRASH:
                 this.onCrash();
+                break;
+            case EVENTS.GAMEOVER:
+                this.onGameOver();
                 break;
             case EVENTS.KEY_LEFT:
                 this.onKeyLeft();
@@ -46,9 +60,15 @@ export class Skier {
             case EVENTS.KEY_DOWN:
                 this.onKeyDown();
                 break;
+            case EVENTS.KEY_R:
+                this.onReset();
+                break;
         }
     }
 
+    onGameOver() {
+        UTILS.emitEvent(EVENTS.TALLY_SCORE, {rawScore: this.y})
+    }
     onCrash() {
         this.direction = 0;
     }
@@ -151,6 +171,9 @@ export class Skier {
 
     getRect() {
         const skierImage = this.getSkierImage();
+        if(!skierImage)
+            return;
+
         return {
             left: this.x + GAME_WIDTH / 2,
             right: this.x + skierImage.width + GAME_WIDTH / 2,

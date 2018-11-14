@@ -17,12 +17,42 @@ export class Game {
 
         // event listeners
         UTILS.eventEmitter.addListener(EVENTS.GAME_INIT_COMPLETE, (event, data) => this.onEvent(event, data));
+        UTILS.eventEmitter.addListener(EVENTS.GAMEOVER, (event, data) => this.onEvent(event, data));
+        UTILS.eventEmitter.addListener(EVENTS.SHOW_SCORE, (event, data) => this.onEvent(event, data));
+        UTILS.eventEmitter.addListener(EVENTS.SCORE_LIST_RETRIEVED, (event, data) => this.onEvent(event, data));
+        UTILS.eventEmitter.addListener(EVENTS.KEY_R, (event, data) => this.onEvent(event, data));
 
-        // game objects
         this.skier = new Skier(0, 0);
         this.obstacleManager = new ObstacleManager();
         this.scoreKeeper = new ScoreKeeper();
-        this.scoreKeeper.getScores();
+        this.gameOver = false;
+    }
+
+    onEvent(event, data) {
+        switch(event) {
+            case EVENTS.GAME_INIT_COMPLETE:
+                console.log('GAME_INIT_COMPLETE');
+                this.gameLoop();
+                break;
+            case EVENTS.GAMEOVER:
+                this.onGameOver();
+                break;
+            case EVENTS.SHOW_SCORE:
+                this.onShowScore(data.score);
+                break;
+            case EVENTS.SCORE_LIST_RETRIEVED:
+                this.onShowScoreList(data.scores);
+                break;
+            case EVENTS.KEY_R:
+                this.onReset();
+                break;
+        }
+    }
+    onReset() {
+        this.gameOver = false;
+        this.clearCanvas();
+        this.obstacleManager.placeInitialObstacles(GAME_WIDTH, GAME_HEIGHT);
+        UTILS.emitEvent(EVENTS.GAME_INIT_COMPLETE);
     }
 
     // 0 = crash
@@ -32,8 +62,6 @@ export class Game {
     // 4 = right down
     // 5 = right
     setupKeyhandler() {
-        const self = this;
-
         $(window).keydown(function(event) {
             switch(event.which) {
                 case 37: // left
@@ -51,6 +79,9 @@ export class Game {
                 case 40: // down
                     UTILS.emitEvent(EVENTS.KEY_DOWN);
                     event.preventDefault();
+                    break;
+                case 82: // reset
+                    UTILS.emitEvent(EVENTS.KEY_R);
                     break;
             }
         });
@@ -72,6 +103,9 @@ export class Game {
     };
 
     gameLoop() {
+        if(this.gameOver) {
+            return;
+        }
         this.ctx.save();
         // Retina support
         this.ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
@@ -90,13 +124,28 @@ export class Game {
         requestAnimationFrame(this.gameLoop.bind(this));
     };
 
-    onEvent(event, data) {
-        switch(event) {
-            case EVENTS.GAME_INIT_COMPLETE:
-                console.log('GAME_INIT_COMPLETE');
-                this.gameLoop();
-                break;
-        }
+    onShowScoreList(scores) {
+        this.ctx.font = '24px serif';
+        const startY = (GAME_HEIGHT / 2) + 100;
+        //this.ctx.moveTo(0, startY);
+        scores.forEach((score, index) => {
+            let scoreDateArray = score.date.split(' ');
+            const scoreText = `Score: ${score.score}  Date: ${scoreDateArray[0]} ${scoreDateArray[1]} ${scoreDateArray[2]}`;
+            const textStats = this.ctx.measureText(scoreText);
+            this.ctx.fillText(scoreText, (GAME_WIDTH - textStats.width) / 2, (startY + (30 * index)));
+        });
+    }
+    onShowScore(score) {
+        this.ctx.font = '48px serif';
+        const scoreText = `Your Score: ${score}`;
+        const textStats = this.ctx.measureText(scoreText);
+        this.ctx.fillText(scoreText, (GAME_WIDTH - textStats.width) / 2, (GAME_HEIGHT - 50) / 2);
+    }
+    onGameOver() {
+        this.gameOver = true;
+        this.ctx.font = '48px serif';
+        const textStats = this.ctx.measureText('Game Over');
+        this.ctx.fillText('Game Over', (GAME_WIDTH - textStats.width) / 2, (GAME_HEIGHT - 150) / 2);
     }
 
     clearCanvas() {
