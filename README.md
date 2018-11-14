@@ -3,7 +3,7 @@
 I found the bug - it was in setupKeyHandler, when pressing the left arrow. If the skier had just crashed, the direction would be 0, and it was being blindly decremented. The resulted in a direction of -1, which is invalid.
 
 ### Refactor
-The entire codebase was refactored into classes. I implemented an observable pattern to handle events. I also created a globals file for configuration and a utility class to handle some general functionality.
+The entire codebase was refactored into classes. I implemented an observable pattern to handle events. I implemented a decorator pattern to handle skier movement. I also created a globals file for configuration and a utility class to handle some general functionality.
 
 ### New Features
 I added the following:

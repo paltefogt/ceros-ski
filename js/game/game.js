@@ -2,6 +2,7 @@ import {Skier} from "./skier.js";
 import {EVENTS, GAME_WIDTH, GAME_HEIGHT, UTILS} from "../lib/globals.js";
 import {ObstacleManager} from "./obstacle.manager.js";
 import {ScoreKeeper} from "./score.keeper.js";
+import {MovementDecorator} from "./movement.decorator.js";
 
 export class Game {
     constructor() {
@@ -22,6 +23,7 @@ export class Game {
         UTILS.eventEmitter.addListener(EVENTS.SCORE_LIST_RETRIEVED, (event, data) => this.onEvent(event, data));
 
         this.skier = new Skier(0, 0);
+        this.skierMovement = new MovementDecorator(this.skier);
         this.obstacleManager = new ObstacleManager();
         this.scoreKeeper = new ScoreKeeper();
         this.gameOver = false;
@@ -102,7 +104,7 @@ export class Game {
 
         this.clearCanvas();
 
-        this.skier.move();
+        this.skierMovement.move();
 
         UTILS.checkIfSkierHitObstacle(this.skier, this.obstacleManager.obstacles);
 
