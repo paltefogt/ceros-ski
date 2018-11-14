@@ -1,34 +1,27 @@
-import {EventEmitter} from "./event.emitter.js";
 import {Skier} from "./skier.js";
-import {EVENTS} from "../lib/config.js";
+import {EVENTS, GAME_WIDTH, GAME_HEIGHT, UTILS} from "../lib/globals.js";
 import {ObstacleManager} from "./obstacle.manager.js";
-import {Utils} from "../lib/utils.js";
 import {ScoreKeeper} from "./score.keeper.js";
 
-export class Game extends EventEmitter {
+export class Game {
     constructor() {
-        super();
-
-        const utils = new Utils();
-        this.gameWidth = utils.gameWidth;
-        this.gameHeight = utils.gameHeight;
         this.canvas = $('<canvas></canvas>')
-            .attr('width', this.gameWidth * window.devicePixelRatio)
-            .attr('height', this.gameHeight * window.devicePixelRatio)
+            .attr('width', GAME_WIDTH * window.devicePixelRatio)
+            .attr('height', GAME_HEIGHT * window.devicePixelRatio)
             .css({
-                width: this.gameWidth + 'px',
-                height: this.gameHeight + 'px'
+                width: GAME_WIDTH + 'px',
+                height: GAME_HEIGHT + 'px'
             });
         $('body').append(this.canvas);
         this.ctx = this.canvas[0].getContext('2d');
 
         // event listeners
-        this.addListener(EVENTS.GAME_INIT_COMPLETE, (event, data) => this.onEvent(event, data));
+        UTILS.eventEmitter.addListener(EVENTS.GAME_INIT_COMPLETE, (event, data) => this.onEvent(event, data));
 
         // game objects
-        this.skier = new Skier(this, 0, 0);
-        this.obstacleManager = new ObstacleManager(this);
-        this.scoreKeeper = new ScoreKeeper(this);
+        this.skier = new Skier(0, 0);
+        this.obstacleManager = new ObstacleManager();
+        this.scoreKeeper = new ScoreKeeper();
         this.scoreKeeper.getScores();
     }
 
@@ -44,19 +37,19 @@ export class Game extends EventEmitter {
         $(window).keydown(function(event) {
             switch(event.which) {
                 case 37: // left
-                    self.emit(EVENTS.KEY_LEFT);
+                    UTILS.emitEvent(EVENTS.KEY_LEFT);
                     event.preventDefault();
                     break;
                 case 39: // right
-                    self.emit(EVENTS.KEY_RIGHT);
+                    UTILS.emitEvent(EVENTS.KEY_RIGHT);
                     event.preventDefault();
                     break;
                 case 38: // up
-                    self.emit(EVENTS.KEY_UP);
+                    UTILS.emitEvent(EVENTS.KEY_UP);
                     event.preventDefault();
                     break;
                 case 40: // down
-                    self.emit(EVENTS.KEY_DOWN);
+                    UTILS.emitEvent(EVENTS.KEY_DOWN);
                     event.preventDefault();
                     break;
             }
@@ -69,9 +62,8 @@ export class Game extends EventEmitter {
         this.skier.loadAssets()
             .then(() => self.obstacleManager.loadAssets())
             .then(() => {
-                self.obstacleManager.placeInitialObstacles(self.gameWidth, self.gameHeight);
-                self.emit(EVENTS.GAME_INIT_COMPLETE);
-                //requestAnimationFrame(self.gameLoop());
+                self.obstacleManager.placeInitialObstacles(GAME_WIDTH, GAME_HEIGHT);
+                UTILS.emitEvent(EVENTS.GAME_INIT_COMPLETE);
             })
             .catch(err => {
                 console.log('ERROR initGame');
@@ -80,8 +72,6 @@ export class Game extends EventEmitter {
     };
 
     gameLoop() {
-        const utils = new Utils();
-
         this.ctx.save();
         // Retina support
         this.ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
@@ -90,11 +80,11 @@ export class Game extends EventEmitter {
 
         this.skier.move();
 
-        utils.checkIfSkierHitObstacle(this.skier, this.obstacleManager.obstacles, this.gameWidth, this.gameHeight);
+        UTILS.checkIfSkierHitObstacle(this.skier, this.obstacleManager.obstacles);
 
-        this.skier.draw(this.ctx, this.gameWidth, this.gameHeight);
+        this.skier.draw(this.ctx, GAME_WIDTH, GAME_HEIGHT);
 
-        this.obstacleManager.drawObstacles(this.ctx, this.skier.x, this.skier.y, this.gameWidth, this.gameHeight);
+        this.obstacleManager.drawObstacles(this.ctx, this.skier.x, this.skier.y, GAME_WIDTH, GAME_HEIGHT);
 
         this.ctx.restore();
         requestAnimationFrame(this.gameLoop.bind(this));
@@ -110,6 +100,6 @@ export class Game extends EventEmitter {
     }
 
     clearCanvas() {
-        this.ctx.clearRect(0, 0, this.gameWidth, this.gameHeight);
+        this.ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
     };
 }

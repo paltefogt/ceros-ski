@@ -1,11 +1,9 @@
-import {Utils} from "../lib/utils.js";
 import {Obstacle} from "./obstacle.js";
-import {EVENTS} from "../lib/config.js";
+import {EVENTS, GAME_WIDTH, GAME_HEIGHT, UTILS} from "../lib/globals.js";
 
 export class ObstacleManager {
-    constructor(subject) {
-        this.subject = subject;
-        this.subject.addListener(EVENTS.PLACE_NEW_OBSTACLE, (event, data) => this.onEvent(event, data));
+    constructor() {
+        UTILS.eventEmitter.addListener(EVENTS.PLACE_NEW_OBSTACLE, (event, data) => this.onEvent(event, data));
 
         this.obstacleTypes = [
             'tree',
@@ -25,8 +23,7 @@ export class ObstacleManager {
     }
 
     loadAssets() {
-        const utils = new Utils();
-        return utils.loadAssets(this.assets)
+        return UTILS.loadAssets(this.assets)
             .then(loadedAssets => {
                 console.log('success loadAssets');
                 this.loadedAssets = loadedAssets;
@@ -39,19 +36,19 @@ export class ObstacleManager {
     onEvent(event, data) {
         switch(event) {
             case EVENTS.PLACE_NEW_OBSTACLE:
-                this.placeNewObstacle(data.direction, data.skierMapX, data.skierMapY, data.gameWidth, data.gameHeight);
+                this.placeNewObstacle(data.direction, data.skierMapX, data.skierMapY);
                 break;
         }
     }
 
-    placeInitialObstacles(gameWidth, gameHeight) {
+    placeInitialObstacles() {
         const self = this;
-        const numberObstacles = Math.ceil(_.random(5, 7) * (gameWidth / 800) * (gameHeight / 500));
+        const numberObstacles = Math.ceil(_.random(5, 7) * (GAME_WIDTH / 800) * (GAME_HEIGHT / 500));
 
         const minX = -50;
-        const maxX = gameWidth + 50;
-        const minY = gameHeight / 2 + 100;
-        const maxY = gameHeight + 50;
+        const maxX = GAME_WIDTH + 50;
+        const minY = GAME_HEIGHT / 2 + 100;
+        const maxY = GAME_HEIGHT + 50;
 
         for(let i = 0; i < numberObstacles; i++) {
             this.placeRandomObstacle(minX, maxX, minY, maxY);
@@ -63,7 +60,7 @@ export class ObstacleManager {
         });
     }
 
-    drawObstacles(ctx, skierMapX, skierMapY, gameWidth, gameHeight) {
+    drawObstacles(ctx, skierMapX, skierMapY) {
         const self = this;
         const newObstacles = [];
         _.each(this.obstacles, function(obstacle) {
@@ -71,7 +68,7 @@ export class ObstacleManager {
             const x = obstacle.x - skierMapX - obstacleImage.width / 2;
             const y = obstacle.y - skierMapY - obstacleImage.height / 2;
 
-            if(x < -100 || x > gameWidth + 50 || y < -100 || y > gameHeight + 50) {
+            if(x < -100 || x > GAME_WIDTH + 50 || y < -100 || y > GAME_HEIGHT + 50) {
                 return;
             }
 
@@ -83,16 +80,16 @@ export class ObstacleManager {
         this.obstacles = newObstacles;
     }
 
-    placeNewObstacle(direction, skierMapX, skierMapY, gameWidth, gameHeight) {
+    placeNewObstacle(direction, skierMapX, skierMapY) {
         const shouldPlaceObstacle = _.random(1, 8);
         if(shouldPlaceObstacle !== 8) {
             return;
         }
 
         const leftEdge = skierMapX;
-        const rightEdge = skierMapX + gameWidth;
+        const rightEdge = skierMapX + GAME_WIDTH;
         const topEdge = skierMapY;
-        const bottomEdge = skierMapY + gameHeight;
+        const bottomEdge = skierMapY + GAME_HEIGHT;
 
         switch(direction) {
             case 1: // left

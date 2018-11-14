@@ -1,18 +1,16 @@
-import {EVENTS, SCORE_URL} from "../lib/config.js";
+import {EVENTS, SCORE_URL, UTILS} from "../lib/globals.js";
 
 export class ScoreKeeper {
-    constructor(subject) {
-        this.subject = subject;
+    constructor() {
         this.score = 0;
         this.crashCount = 0;
 
         // event listeners
-        this.subject.addListener(EVENTS.SKIER_CRASH, (event, data) => this.onEvent(event, data));
-        this.subject.addListener(EVENTS.INCREMENT_SCORE, (event, data) => this.onEvent(event, data));
+        UTILS.eventEmitter.addListener(EVENTS.SKIER_CRASH, (event, data) => this.onEvent(event, data));
+        UTILS.eventEmitter.addListener(EVENTS.INCREMENT_SCORE, (event, data) => this.onEvent(event, data));
     }
 
     onEvent(event, data) {
-        console.log(`onEvent: ${event} : ${data}`);
         switch(event) {
             case EVENTS.SKIER_CRASH:
                 this.onCrash();
@@ -24,7 +22,7 @@ export class ScoreKeeper {
     }
 
     onCrash() {
-        this.crashCount < 3 ? ++this.crashCount : this.subject.emit(EVENTS.GAMEOVER);
+        this.crashCount < 3 ? ++this.crashCount : UTILS.emitEvent(EVENTS.GAMEOVER);
     }
 
     incrementScore(pointsToAdd) {

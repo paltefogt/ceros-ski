@@ -1,8 +1,16 @@
+import {EVENTS} from "./globals.js";
+import {EventEmitter} from "../game/event.emitter.js";
 
 export class Utils {
     constructor() {
-        this.gameWidth = window.innerWidth;
-        this.gameHeight = window.innerHeight;
+        this.eventEmitter = new EventEmitter();
+    }
+
+    emitEvent(label, data) {
+        this.eventEmitter.emit(label, data);
+    }
+    addListener(label, callback) {
+        this.eventEmitter.addListener(label, (event, data) => callback(event, data));
     }
 
     loadAssets(assets) {
@@ -27,16 +35,16 @@ export class Utils {
         return $.when.apply($, assetPromises);
     }
 
-    checkIfSkierHitObstacle(skier, obstacles, gameWidth, gameHeight) {
+    checkIfSkierHitObstacle(skier, obstacles) {
         const self = this;
-        const skierRect = skier.getRect(gameWidth, gameHeight);
+        const skierRect = skier.getRect();
         const collision = _.find(obstacles, function(obstacle) {
             const obstacleRect = obstacle.getRect();
             return self.intersectRect(skierRect, obstacleRect);
         });
 
         if(collision) {
-            skier.direction = 0;
+            this.emitEvent(EVENTS.SKIER_CRASH);
         }
     };
     intersectRect(r1, r2) {

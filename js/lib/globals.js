@@ -1,3 +1,5 @@
+import {Utils} from "./utils.js";
+
 export const SKIER_SPEED = 8;
 export const SKIER_SPEED_SCALER = 8;
 export const EVENTS = {
@@ -14,3 +16,6 @@ export const EVENTS = {
     KEY_DOWN: 'keyDown'
 };
 export const SCORE_URL = 'https://dbae2oep6a.execute-api.us-east-1.amazonaws.com/dev/ski-game/score';
+export const GAME_WIDTH = window.innerWidth;
+export const GAME_HEIGHT = window.innerHeight;
+export const UTILS = new Utils();
