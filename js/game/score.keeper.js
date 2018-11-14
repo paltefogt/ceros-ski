@@ -56,7 +56,6 @@ export class ScoreKeeper {
         const payload = JSON.stringify({score: this.score});
         const defer = new $.Deferred();
         $.post( SCORE_URL, payload, function( data ) {
-            console.log(data);
             defer.resolve(data);
         });
         return defer.promise();

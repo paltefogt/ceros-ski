@@ -1,11 +1,18 @@
-import {SKIER_SPEED, SKIER_SPEED_SCALER, EVENTS, GAME_HEIGHT, GAME_WIDTH, UTILS} from "../lib/globals.js";
+import {SKIER_SPEED,
+    SKIER_SPEED_SCALER_1,
+    SKIER_SPEED_SCALER_2,
+    SKIER_SPEED_SCALER_3,
+    SKIER_SPEED_THRESHOLD_1,
+    SKIER_SPEED_THRESHOLD_2,
+    EVENTS,
+    GAME_HEIGHT, GAME_WIDTH, UTILS} from "../lib/globals.js";
 
 export class Skier {
     constructor(x, y) {
         this.x = x;
         this.y = y;
         this.speed = SKIER_SPEED;
-        this.speedScaler = SKIER_SPEED_SCALER;
+        this.speedScaler = SKIER_SPEED_SCALER_1;
         this.direction = 5;
         this.assets = {
             skierCrash: 'img/skier_crash.png',
@@ -25,14 +32,6 @@ export class Skier {
         UTILS.eventEmitter.addListener(EVENTS.KEY_DOWN, (event, data) => this.onEvent(event, data));
         UTILS.eventEmitter.addListener(EVENTS.SKIER_CRASH, (event, data) => this.onEvent(event, data));
         UTILS.eventEmitter.addListener(EVENTS.GAMEOVER, (event, data) => this.onEvent(event, data));
-    }
-
-    onReset() {
-        // this.x = 0;
-        // this.y = 0;
-        // this.speed = SKIER_SPEED;
-        // this.speedScaler = SKIER_SPEED_SCALER;
-        // this.direction = 5;
     }
 
     onEvent(event, data) {
@@ -134,6 +133,10 @@ export class Skier {
                 this.emitEvent(EVENTS.PLACE_NEW_OBSTACLE, this.getNewObstacleData());
                 break;
         }
+        if (this.y > 1000 && this.y < SKIER_SPEED_THRESHOLD_1)
+            this.speedScaler = SKIER_SPEED_SCALER_2;
+        if(this.y > SKIER_SPEED_THRESHOLD_2)
+            this.speedScaler = SKIER_SPEED_SCALER_3;
     }
 
     getSkierAsset() {

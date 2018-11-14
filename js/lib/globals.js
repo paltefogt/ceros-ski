@@ -1,8 +1,12 @@
 import {Utils} from "./utils.js";
 
-export const SKIER_SPEED = 8;
-export const SKIER_SPEED_SCALER = 2;
-export const CRASH_LIMIT = 1;
+export const SKIER_SPEED = 10;
+export const SKIER_SPEED_THRESHOLD_1 = 5000;
+export const SKIER_SPEED_THRESHOLD_2 = 10000;
+export const SKIER_SPEED_SCALER_1 = 2.5;
+export const SKIER_SPEED_SCALER_2 = 1.5;
+export const SKIER_SPEED_SCALER_3 = 1;
+export const CRASH_LIMIT = 3;
 export const EVENTS = {
     INIT_SKIER: 'initSkier',
     INIT_SKIER_COMPLETE: 'initSkierComplete',
