@@ -23,6 +23,7 @@ export class ScoreKeeper {
 
     onCrash() {
         this.crashCount < 3 ? ++this.crashCount : UTILS.emitEvent(EVENTS.GAMEOVER);
+        console.log(`crashCount: ${this.crashCount}`);
     }
 
     incrementScore(pointsToAdd) {

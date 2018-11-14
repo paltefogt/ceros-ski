@@ -4,6 +4,7 @@ import {EVENTS, GAME_WIDTH, GAME_HEIGHT, UTILS} from "../lib/globals.js";
 export class ObstacleManager {
     constructor() {
         UTILS.eventEmitter.addListener(EVENTS.PLACE_NEW_OBSTACLE, (event, data) => this.onEvent(event, data));
+        UTILS.eventEmitter.addListener(EVENTS.SKIER_CRASH, (event, data) => this.onEvent(event, data));
 
         this.obstacleTypes = [
             'tree',
@@ -38,9 +39,15 @@ export class ObstacleManager {
             case EVENTS.PLACE_NEW_OBSTACLE:
                 this.placeNewObstacle(data.direction, data.skierMapX, data.skierMapY);
                 break;
+            case EVENTS.SKIER_CRASH:
+                this.onSkierCrash(data.obstacleIndex);
+                break;
         }
     }
 
+    onSkierCrash(obstacleIndex) {
+        this.obstacles.splice(obstacleIndex, 1);
+    }
     placeInitialObstacles() {
         const self = this;
         const numberObstacles = Math.ceil(_.random(5, 7) * (GAME_WIDTH / 800) * (GAME_HEIGHT / 500));

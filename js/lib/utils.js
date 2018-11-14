@@ -38,13 +38,13 @@ export class Utils {
     checkIfSkierHitObstacle(skier, obstacles) {
         const self = this;
         const skierRect = skier.getRect();
-        const collision = _.find(obstacles, function(obstacle) {
+        const collision = _.findIndex(obstacles, (obstacle) => {
             const obstacleRect = obstacle.getRect();
             return self.intersectRect(skierRect, obstacleRect);
         });
 
-        if(collision) {
-            this.emitEvent(EVENTS.SKIER_CRASH);
+        if(collision > -1) {
+            this.emitEvent(EVENTS.SKIER_CRASH, {obstacleIndex: collision});
         }
     };
     intersectRect(r1, r2) {
