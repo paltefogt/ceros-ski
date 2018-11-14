@@ -25,8 +25,6 @@ export class Skier {
         UTILS.eventEmitter.addListener(EVENTS.KEY_DOWN, (event, data) => this.onEvent(event, data));
         UTILS.eventEmitter.addListener(EVENTS.SKIER_CRASH, (event, data) => this.onEvent(event, data));
         UTILS.eventEmitter.addListener(EVENTS.GAMEOVER, (event, data) => this.onEvent(event, data));
-        // UTILS.eventEmitter.addListener(EVENTS.KEY_R, (event, data) => this.onEvent(event, data));
-
     }
 
     onReset() {
@@ -59,9 +57,6 @@ export class Skier {
                 break;
             case EVENTS.KEY_DOWN:
                 this.onKeyDown();
-                break;
-            case EVENTS.KEY_R:
-                this.onReset();
                 break;
         }
     }

@@ -20,7 +20,6 @@ export class Game {
         UTILS.eventEmitter.addListener(EVENTS.GAMEOVER, (event, data) => this.onEvent(event, data));
         UTILS.eventEmitter.addListener(EVENTS.SHOW_SCORE, (event, data) => this.onEvent(event, data));
         UTILS.eventEmitter.addListener(EVENTS.SCORE_LIST_RETRIEVED, (event, data) => this.onEvent(event, data));
-        UTILS.eventEmitter.addListener(EVENTS.KEY_R, (event, data) => this.onEvent(event, data));
 
         this.skier = new Skier(0, 0);
         this.obstacleManager = new ObstacleManager();
@@ -43,16 +42,7 @@ export class Game {
             case EVENTS.SCORE_LIST_RETRIEVED:
                 this.onShowScoreList(data.scores);
                 break;
-            case EVENTS.KEY_R:
-                this.onReset();
-                break;
         }
-    }
-    onReset() {
-        this.gameOver = false;
-        this.clearCanvas();
-        this.obstacleManager.placeInitialObstacles(GAME_WIDTH, GAME_HEIGHT);
-        UTILS.emitEvent(EVENTS.GAME_INIT_COMPLETE);
     }
 
     // 0 = crash
@@ -80,8 +70,8 @@ export class Game {
                     UTILS.emitEvent(EVENTS.KEY_DOWN);
                     event.preventDefault();
                     break;
-                case 82: // reset
-                    UTILS.emitEvent(EVENTS.KEY_R);
+                case 13: // enter for reset
+                    location.reload(true);
                     break;
             }
         });
@@ -127,7 +117,8 @@ export class Game {
     onShowScoreList(scores) {
         this.ctx.font = '24px serif';
         const startY = (GAME_HEIGHT / 2) + 100;
-        //this.ctx.moveTo(0, startY);
+        const textStats = this.ctx.measureText('High Scores');
+        this.ctx.fillText('High Scores', (GAME_WIDTH - textStats.width) / 2, startY - 30);
         scores.forEach((score, index) => {
             let scoreDateArray = score.date.split(' ');
             const scoreText = `Score: ${score.score}  Date: ${scoreDateArray[0]} ${scoreDateArray[1]} ${scoreDateArray[2]}`;
@@ -144,8 +135,10 @@ export class Game {
     onGameOver() {
         this.gameOver = true;
         this.ctx.font = '48px serif';
-        const textStats = this.ctx.measureText('Game Over');
+        let textStats = this.ctx.measureText('Game Over');
         this.ctx.fillText('Game Over', (GAME_WIDTH - textStats.width) / 2, (GAME_HEIGHT - 150) / 2);
+        textStats = this.ctx.measureText('Press ENTER to reset');
+        this.ctx.fillText('Press ENTER to reset', (GAME_WIDTH - textStats.width) / 2, (GAME_HEIGHT - 250) / 2);
     }
 
     clearCanvas() {

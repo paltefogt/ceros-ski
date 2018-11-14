@@ -8,13 +8,7 @@ export class ScoreKeeper {
         // event listeners
         UTILS.eventEmitter.addListener(EVENTS.SKIER_CRASH, (event, data) => this.onEvent(event, data));
         UTILS.eventEmitter.addListener(EVENTS.TALLY_SCORE, (event, data) => this.onEvent(event, data));
-        // UTILS.eventEmitter.addListener(EVENTS.KEY_R, (event, data) => this.onEvent(event, data));
 
-    }
-
-    onReset() {
-        // this.score = 0;
-        // this.crashCount = 0;
     }
 
     onEvent(event, data) {
@@ -24,9 +18,6 @@ export class ScoreKeeper {
                 break;
             case EVENTS.TALLY_SCORE:
                 this.tallyScore(data.rawScore);
-                break;
-            case EVENTS.KEY_R:
-                this.onReset();
                 break;
         }
     }

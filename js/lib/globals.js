@@ -1,7 +1,7 @@
 import {Utils} from "./utils.js";
 
 export const SKIER_SPEED = 8;
-export const SKIER_SPEED_SCALER = 8;
+export const SKIER_SPEED_SCALER = 2;
 export const CRASH_LIMIT = 1;
 export const EVENTS = {
     INIT_SKIER: 'initSkier',
@@ -17,7 +17,6 @@ export const EVENTS = {
     KEY_RIGHT: 'keyRight',
     KEY_UP: 'keyUp',
     KEY_DOWN: 'keyDown',
-    KEY_R: 'keyR',
 };
 export const SCORE_URL = 'https://dbae2oep6a.execute-api.us-east-1.amazonaws.com/dev/ski-game/score';
 export const GAME_WIDTH = window.innerWidth;
