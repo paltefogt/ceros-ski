@@ -3,7 +3,7 @@ import {EVENTS,
     UTILS,
     CRASH_LIMIT,
     SCORE_THRESHOLD_1,
-    SCORE_THRESHOLD_2, 
+    SCORE_THRESHOLD_2,
     SCORE_VALUE_1,
     SCORE_VALUE_2,
     SCORE_VALUE_3} from "../lib/globals.js";

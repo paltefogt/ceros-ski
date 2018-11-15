@@ -12,5 +12,6 @@ I added the following:
  - An endgame state - it is gameover if you hit three obstacles (this and other settings like skier speed are configurable).
  - Keeping score - score is based on how far down the mountain you have gone. You get increasing amounts of points as you get further down.
  - The skier gets faster as you get further down the mountain.
+ - More obstacles are generated as you get further down the mountain.
  - Score display and persistence - Top ten scores are displayed on gameover. I wrote a small microservice using AWS Lambda and Api Gateway to store scores in DynamoDB. See it here: https://github.com/paltefogt/lambda-demos/blob/master/ski_game/lib/skiGame.js
  - Game reset - the game can be reset by pressing the "Enter" key.

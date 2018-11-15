@@ -1,4 +1,8 @@
 import {
+    PLACE_OBSTACLE_ODDS_1,
+    PLACE_OBSTACLE_ODDS_2,
+    PLACE_OBSTACLE_ODDS_3,
+    SKIER_SPEED_SCALER_1,
     SKIER_SPEED_SCALER_2,
     SKIER_SPEED_SCALER_3,
     SKIER_SPEED_THRESHOLD_1,
@@ -93,10 +97,23 @@ export class MovementDecorator {
     }
 
     getNewObstacleData() {
+        let odds;
+        switch(this.entity.speedScaler) {
+            case SKIER_SPEED_SCALER_1:
+                odds = PLACE_OBSTACLE_ODDS_1;
+                break;
+            case SKIER_SPEED_SCALER_2:
+                odds = PLACE_OBSTACLE_ODDS_2;
+                break;
+            case SKIER_SPEED_SCALER_3:
+                odds = PLACE_OBSTACLE_ODDS_3;
+                break;
+        }
         return {
             direction: this.entity.direction,
             skierMapX: this.entity.x,
-            skierMapY: this.entity.y
+            skierMapY: this.entity.y,
+            odds: odds
         };
     }
 }

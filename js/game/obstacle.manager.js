@@ -37,7 +37,7 @@ export class ObstacleManager {
     onEvent(event, data) {
         switch(event) {
             case EVENTS.PLACE_NEW_OBSTACLE:
-                this.placeNewObstacle(data.direction, data.skierMapX, data.skierMapY);
+                this.placeNewObstacle(data.direction, data.skierMapX, data.skierMapY, data.odds);
                 break;
             case EVENTS.SKIER_CRASH:
                 this.onSkierCrash(data.obstacleIndex);
@@ -87,9 +87,9 @@ export class ObstacleManager {
         this.obstacles = newObstacles;
     }
 
-    placeNewObstacle(direction, skierMapX, skierMapY) {
-        const shouldPlaceObstacle = _.random(1, 8);
-        if(shouldPlaceObstacle !== 8) {
+    placeNewObstacle(direction, skierMapX, skierMapY, odds) {
+        const shouldPlaceObstacle = _.random(1, odds);
+        if(shouldPlaceObstacle !== odds) {
             return;
         }
 
