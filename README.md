@@ -1,5 +1,5 @@
 # Ski Game
-I put about 10 hours into the project in total.
+I put about 10 hours into the project in total. See it here: https://github.com/paltefogt/ski-game
 ### Bug Fix
 I found the bug - it was in setupKeyHandler, when pressing the left arrow. If the skier had just crashed, the direction would be 0, and it was being blindly decremented. The resulted in a direction of -1, which is invalid.
 
