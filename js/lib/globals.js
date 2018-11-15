@@ -6,6 +6,11 @@ export const SKIER_SPEED_THRESHOLD_2 = 10000;
 export const SKIER_SPEED_SCALER_1 = 2.5;
 export const SKIER_SPEED_SCALER_2 = 1.5;
 export const SKIER_SPEED_SCALER_3 = 1;
+export const SCORE_THRESHOLD_1 = 5;
+export const SCORE_THRESHOLD_2 = 20;
+export const SCORE_VALUE_1 = 100;
+export const SCORE_VALUE_2 = 200;
+export const SCORE_VALUE_3 = 300;
 export const CRASH_LIMIT = 3;
 export const EVENTS = {
     INIT_SKIER: 'initSkier',

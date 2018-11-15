@@ -1,4 +1,5 @@
 import {EVENTS, SCORE_URL, UTILS, CRASH_LIMIT} from "../lib/globals.js";
+import {SCORE_THRESHOLD_1, SCORE_THRESHOLD_2} from "../lib/globals";
 
 export class ScoreKeeper {
     constructor() {
@@ -33,12 +34,12 @@ export class ScoreKeeper {
         const remain = rawScore % 100;
 
         _.times(times, n => {
-            if(n === 0)
-                this.score += 100;
-            if(n > 0 && n <= 3)
-                this.score += 200;
+            if(n >= 0 && n <= SCORE_THRESHOLD_1)
+                this.score += SCORE_VALUE_1;
+            if(n > 5 && n <= SCORE_THRESHOLD_2)
+                this.score += SCORE_VALUE_2;
             if(n > 3)
-                this.score += 300;
+                this.score += SCORE_VALUE_3;
         });
         this.score += remain;
         UTILS.emitEvent(EVENTS.SHOW_SCORE, {score: this.score});
