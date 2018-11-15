@@ -1,5 +1,12 @@
-import {EVENTS, SCORE_URL, UTILS, CRASH_LIMIT} from "../lib/globals.js";
-import {SCORE_THRESHOLD_1, SCORE_THRESHOLD_2} from "../lib/globals";
+import {EVENTS,
+    SCORE_URL,
+    UTILS,
+    CRASH_LIMIT,
+    SCORE_THRESHOLD_1,
+    SCORE_THRESHOLD_2, 
+    SCORE_VALUE_1,
+    SCORE_VALUE_2,
+    SCORE_VALUE_3} from "../lib/globals.js";
 
 export class ScoreKeeper {
     constructor() {
