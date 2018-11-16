@@ -24,16 +24,16 @@ export class SkierMovementDecorator {
             case 2:
                 this.entity.x -= Math.round(this.entity.speed / this.entity.speedScaler);
                 this.entity.y += Math.round(this.entity.speed / this.entity.speedScaler);
-                UTILS.emitEvent(EVENTS.PLACE_NEW_OBSTACLE, this.getNewObstacleData());
+                UTILS.emitEvent(EVENTS.PLACE_NEW_OBSTACLE, this.getNewObstacleData(this.entity.speedScaler));
                 break;
             case 3:
                 this.entity.y += Math.round(this.entity.speed / this.entity.speedScaler);
-                UTILS.emitEvent(EVENTS.PLACE_NEW_OBSTACLE, this.getNewObstacleData());
+                UTILS.emitEvent(EVENTS.PLACE_NEW_OBSTACLE, this.getNewObstacleData(this.entity.speedScaler));
                 break;
             case 4:
                 this.entity.x += Math.round(this.entity.speed / this.entity.speedScaler);
                 this.entity.y += Math.round(this.entity.speed / this.entity.speedScaler);
-                UTILS.emitEvent(EVENTS.PLACE_NEW_OBSTACLE, this.getNewObstacleData());
+                UTILS.emitEvent(EVENTS.PLACE_NEW_OBSTACLE, this.getNewObstacleData(this.entity.speedScaler));
                 break;
         }
         if (this.entity.y > 1000 && this.entity.y < SKIER_SPEED_THRESHOLDS.SKIER_SPEED_THRESHOLD_1)
@@ -68,7 +68,7 @@ export class SkierMovementDecorator {
     onKeyLeft() {
         if(this.entity.direction === 1) {
             this.entity.x -= this.entity.speed;
-            UTILS.emitEvent(EVENTS.PLACE_NEW_OBSTACLE, this.getNewObstacleData());
+            UTILS.emitEvent(EVENTS.PLACE_NEW_OBSTACLE, this.getNewObstacleData(this.entity.speedScaler));
         }
         else {
             this.entity.direction === 0 ? this.entity.direction = 1 : --this.entity.direction;
@@ -77,7 +77,7 @@ export class SkierMovementDecorator {
     onKeyRight() {
         if(this.entity.direction === 5) {
             this.entity.x += this.entity.speed;
-            UTILS.emitEvent(EVENTS.PLACE_NEW_OBSTACLE, this.getNewObstacleData());
+            UTILS.emitEvent(EVENTS.PLACE_NEW_OBSTACLE, this.getNewObstacleData(this.entity.speedScaler));
         }
         else {
             this.entity.direction === 0 ? this.entity.direction = 5 : ++this.entity.direction;
