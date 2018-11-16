@@ -1,0 +1,11 @@
+{
+  "type": "skier",
+  "x": 0,
+  "y": 0,
+  "speed": "SKIER_SPEED",
+  "speedScaler": "SKIER_SPEED_SCALER_1",
+  "direction": 5,
+  "decorators": [
+    "SkierMovementDecorator"
+  ]
+}

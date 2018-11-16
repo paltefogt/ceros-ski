@@ -1,19 +1,17 @@
-import {SKIER_SPEED,
-    SKIER_SPEED_SCALER_1,
-    SKIER_SPEED_SCALER_2,
-    SKIER_SPEED_SCALER_3,
-    SKIER_SPEED_THRESHOLD_1,
-    SKIER_SPEED_THRESHOLD_2,
+import {
+    SKIER_SPEEDS,
+    SKIER_SPEED_SCALERS,
     EVENTS,
     GAME_HEIGHT, GAME_WIDTH, UTILS} from "../lib/globals.js";
+import {SkierMovementDecorator} from "./skier.movement.decorator.js";
 
 export class Skier {
-    constructor(x, y) {
-        this.x = x;
-        this.y = y;
-        this.speed = SKIER_SPEED;
-        this.speedScaler = SKIER_SPEED_SCALER_1;
-        this.direction = 5;
+    constructor() {
+        // this.x = 0;
+        // this.y = 0;
+        // this.speed = SKIER_SPEED;
+        // this.speedScaler = SKIER_SPEED_SCALER_1;
+        // this.direction = 5;
         this.assets = {
             skierCrash: 'img/skier_crash.png',
             skierLeft: 'img/skier_left.png',
@@ -48,15 +46,36 @@ export class Skier {
         UTILS.emitEvent(type, data);
     }
 
-    loadAssets() {
+    init(configJson) {
         return UTILS.loadAssets(this.assets)
             .then(loadedAssets => {
-                console.log('success loadAssets');
                 this.loadedAssets = loadedAssets;
+                return fetch(`./js/game/entity.configs/${configJson}.json`)
+                    .then(response => response.json())
+                    .then(json => {
+                        if(json.type !== 'skier')
+                            throw 'ERROR skier.init: json is not type skier';
+                        this.x = json.x;
+                        this.y = json.y;
+                        this.direction = json.direction;
+                        this.speed = SKIER_SPEEDS[json.speed];
+                        this.speedScaler = SKIER_SPEED_SCALERS[json.speedScaler];
+                        json.decorators.forEach(decorator => {
+                            this.getDecorator(decorator);
+                        });
+                    });
             })
             .catch(err => {
                 console.log(`Error loadAssets: ${err}`);
             });
+    }
+
+    getDecorator(name) {
+        switch(name) {
+            case 'SkierMovementDecorator':
+                this.skierMovement = new SkierMovementDecorator(this);
+                break;
+        }
     }
 
     getSkierAsset() {
@@ -103,5 +122,9 @@ export class Skier {
     draw(ctx) {
         const skierImage = this.getSkierImage();
         ctx.drawImage(skierImage, (GAME_WIDTH - skierImage.width) / 2, (GAME_HEIGHT - skierImage.height) / 2, skierImage.width, skierImage.height);
+    }
+
+    move() {
+        this.skierMovement.move();
     }
 }

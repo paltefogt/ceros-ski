@@ -26,7 +26,6 @@ export class ObstacleManager {
     loadAssets() {
         return UTILS.loadAssets(this.assets)
             .then(loadedAssets => {
-                console.log('success loadAssets');
                 this.loadedAssets = loadedAssets;
             })
             .catch(err => {

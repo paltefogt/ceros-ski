@@ -2,16 +2,13 @@ import {
     PLACE_OBSTACLE_ODDS_1,
     PLACE_OBSTACLE_ODDS_2,
     PLACE_OBSTACLE_ODDS_3,
-    SKIER_SPEED_SCALER_1,
-    SKIER_SPEED_SCALER_2,
-    SKIER_SPEED_SCALER_3,
-    SKIER_SPEED_THRESHOLD_1,
-    SKIER_SPEED_THRESHOLD_2,
+    SKIER_SPEED_SCALERS,
+    SKIER_SPEED_THRESHOLDS,
     EVENTS,
     UTILS
 } from "../lib/globals.js";
 
-export class MovementDecorator {
+export class SkierMovementDecorator {
     constructor (entity) {
         this.entity = entity;
 
@@ -39,10 +36,10 @@ export class MovementDecorator {
                 UTILS.emitEvent(EVENTS.PLACE_NEW_OBSTACLE, this.getNewObstacleData());
                 break;
         }
-        if (this.entity.y > 1000 && this.entity.y < SKIER_SPEED_THRESHOLD_1)
-            this.entity.speedScaler = SKIER_SPEED_SCALER_2;
-        if(this.entity.y > SKIER_SPEED_THRESHOLD_2)
-            this.entity.speedScaler = SKIER_SPEED_SCALER_3;
+        if (this.entity.y > 1000 && this.entity.y < SKIER_SPEED_THRESHOLDS.SKIER_SPEED_THRESHOLD_1)
+            this.entity.speedScaler = SKIER_SPEED_SCALERS.SKIER_SPEED_SCALER_2;
+        if(this.entity.y > SKIER_SPEED_THRESHOLDS.SKIER_SPEED_THRESHOLD_2)
+            this.entity.speedScaler = SKIER_SPEED_SCALERS.SKIER_SPEED_SCALER_3;
     }
 
     onEvent(event, data) {
@@ -99,13 +96,13 @@ export class MovementDecorator {
     getNewObstacleData() {
         let odds;
         switch(this.entity.speedScaler) {
-            case SKIER_SPEED_SCALER_1:
+            case SKIER_SPEED_SCALERS.SKIER_SPEED_SCALER_1:
                 odds = PLACE_OBSTACLE_ODDS_1;
                 break;
-            case SKIER_SPEED_SCALER_2:
+            case SKIER_SPEED_SCALERS.SKIER_SPEED_SCALER_2:
                 odds = PLACE_OBSTACLE_ODDS_2;
                 break;
-            case SKIER_SPEED_SCALER_3:
+            case SKIER_SPEED_SCALERS.SKIER_SPEED_SCALER_3:
                 odds = PLACE_OBSTACLE_ODDS_3;
                 break;
         }

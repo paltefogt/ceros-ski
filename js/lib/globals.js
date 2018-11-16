@@ -1,6 +1,17 @@
 import {Utils} from "./utils.js";
 
-export const SKIER_SPEED = 10;
+export const SKIER_SPEEDS = {
+    SKIER_SPEED: 10
+};
+export const SKIER_SPEED_THRESHOLDS = {
+    SKIER_SPEED_THRESHOLD_1: 5000,
+    SKIER_SPEED_THRESHOLD_2: 10000
+};
+export const SKIER_SPEED_SCALERS = {
+    SKIER_SPEED_SCALER_1: 2.5,
+    SKIER_SPEED_SCALER_2: 1.5,
+    SKIER_SPEED_SCALER_3: 1
+};
 export const SKIER_SPEED_THRESHOLD_1 = 5000;
 export const SKIER_SPEED_THRESHOLD_2 = 10000;
 export const SKIER_SPEED_SCALER_1 = 2.5;
