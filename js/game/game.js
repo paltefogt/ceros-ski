@@ -27,6 +27,21 @@ export class Game {
         this.gameOver = false;
     }
 
+    initGame() {
+        const self = this;
+        this.setupKeyhandler();
+        return this.skier.init('skier.config')
+            .then(() => self.obstacleManager.loadAssets())
+            .then(() => {
+                self.obstacleManager.placeInitialObstacles(GAME_WIDTH, GAME_HEIGHT);
+                UTILS.emitEvent(EVENTS.GAME_INIT_COMPLETE);
+            })
+            .catch(err => {
+                console.log('ERROR initGame');
+                console.log(err);
+            });
+    };
+
     onEvent(event, data) {
         switch(event) {
             case EVENTS.GAME_INIT_COMPLETE:
@@ -75,21 +90,6 @@ export class Game {
                     break;
             }
         });
-    };
-
-    initGame() {
-        const self = this;
-        this.setupKeyhandler();
-        this.skier.init('skier.config')
-            .then(() => self.obstacleManager.loadAssets())
-            .then(() => {
-                self.obstacleManager.placeInitialObstacles(GAME_WIDTH, GAME_HEIGHT);
-                UTILS.emitEvent(EVENTS.GAME_INIT_COMPLETE);
-            })
-            .catch(err => {
-                console.log('ERROR initGame');
-                console.log(err);
-            });
     };
 
     gameLoop() {

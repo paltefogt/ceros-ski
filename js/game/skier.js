@@ -23,15 +23,11 @@ export class Skier {
         this.loadedAssets = {};
 
         // event listeners
-        UTILS.eventEmitter.addListener(EVENTS.INIT_SKIER, (event, data) => this.onEvent(event, data));
         UTILS.eventEmitter.addListener(EVENTS.GAMEOVER, (event, data) => this.onEvent(event, data));
     }
 
     onEvent(event, data) {
         switch(event) {
-            case EVENTS.INIT_SKIER:
-                this.loadAssets();
-                break;
             case EVENTS.GAMEOVER:
                 this.onGameOver();
                 break;
@@ -40,10 +36,6 @@ export class Skier {
 
     onGameOver() {
         UTILS.emitEvent(EVENTS.TALLY_SCORE, {rawScore: this.y})
-    }
-
-    emitEvent(type, data) {
-        UTILS.emitEvent(type, data);
     }
 
     init(configJson) {

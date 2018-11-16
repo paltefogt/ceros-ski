@@ -86,16 +86,16 @@ export class SkierMovementDecorator {
     onKeyUp() {
         if(this.entity.direction === 1 || this.entity.direction === 5) {
             this.entity.y -= this.entity.speed;
-            UTILS.emitEvent(EVENTS.PLACE_NEW_OBSTACLE, this.getNewObstacleData());
+            UTILS.emitEvent(EVENTS.PLACE_NEW_OBSTACLE, this.getNewObstacleData(this.entity.speedScaler));
         }
     }
     onKeyDown() {
         this.entity.direction = 3;
     }
 
-    getNewObstacleData() {
+    getNewObstacleData(speedScaler) {
         let odds;
-        switch(this.entity.speedScaler) {
+        switch(speedScaler) {
             case SKIER_SPEED_SCALERS.SKIER_SPEED_SCALER_1:
                 odds = PLACE_OBSTACLE_ODDS_1;
                 break;
